@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
+use App\Http\Controllers\CursosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,11 @@ Route::prefix('usuarios')->group(function(){
     
     Route::get('/listar',[UsuariosController::class,'listar']);
     Route::get('/ver/{id}',[UsuariosController::class,'ver']);
+});
+
+Route::prefix('cursos')->group(function(){
+    Route::put('/crear',[CursosController::class,'crear']);
+    
+    Route::get('/listar',[CursosController::class,'listar']);
+    Route::get('/ver/{id}',[CursosController::class,'ver']);
 });

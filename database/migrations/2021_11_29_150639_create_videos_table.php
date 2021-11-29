@@ -18,6 +18,8 @@ class CreateVideosTable extends Migration
             $table->string('titulo', 150);
             $table->string('fotoPortada');
             $table->string('enlace', 150);
+            $table->unsignedBigInteger('cursos_id');
+            $table->foreign('cursos_id')->references('id')->on('cursos');
             $table->timestamps();
         });
     }
