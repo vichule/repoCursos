@@ -45,14 +45,14 @@ class CursosController extends Controller
             $curso = DB::Table('curso');
 
             if ($req->has('titulo')) {
-            $curso = Curso::withCount('videos as cantidad')
+            $curso = Curso::withCount('videos as cantidad_videos')
             ->where('titulo', 'like', '%' .$req->input('titulo'). '%')
             ->get();
             $respuesta['datos'] = $curso;
 
         	} else {
 
-        	$curso = Curso::withCount('videos as cantidad')->get();
+        	$curso = Curso::withCount('videos as cantidad_videos')->get();
             $respuesta['datos'] = $curso;
         	}
             

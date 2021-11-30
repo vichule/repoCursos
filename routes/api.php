@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\CursosController;
+use App\Http\Controllers\VideosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +23,20 @@ Route::prefix('usuarios')->group(function(){
     Route::post('/editar/{id}',[UsuariosController::class,'editar']);
     
     Route::get('/listar',[UsuariosController::class,'listar']);
-    Route::get('/ver/{id}',[UsuariosController::class,'ver']);
+    Route::put('/comprar_curso/{usuarios_id}/{cursos_id}',[UsuariosController::class,'comprar_curso']);
+    Route::get('/listar_usuario_curso/{id}',[UsuariosController::class,'listar_usuario_curso']);
 });
+
+
 
 Route::prefix('cursos')->group(function(){
     Route::put('/crear',[CursosController::class,'crear']);
     
     Route::get('/listar',[CursosController::class,'listar']);
     Route::get('/ver/{id}',[CursosController::class,'ver']);
+});
+
+Route::prefix('videos')->group(function(){
+    Route::put('/crear',[VideosController::class,'crear']);
+    
 });

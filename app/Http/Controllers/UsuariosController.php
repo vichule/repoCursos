@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
+use App\Models\Curso;
 
 class UsuariosController extends Controller
 {
@@ -23,17 +24,23 @@ class UsuariosController extends Controller
     	$usuario->contraseña = $datos->contraseña;
     	$usuario->activo = $datos->activo = 1;
 
+        if(isset($datos->email))
+            $usuario->email = $datos->email;
 
     	try{
+            if (Usuario::where('email', '=', $datos->email)->first()) {
+                $respuesta['msg'] = "Este email ya ha sido utilizado por otro usuario";
+            }else{
     		$usuario->save();
     		$respuesta['msg'] = "Usuario guardado con id ".$usuario->id;
-
+            }
     	}catch(\Exception $e){
     		$respuesta['status'] = 0;
     		$respuesta['msg'] = "Se ha producido un error ".$e->getMessage();
     	}
     	
     	return response()->json($respuesta);
+
     }
 
     public function editar(Request $req,$id){
@@ -102,4 +109,58 @@ class UsuariosController extends Controller
 
             return response()->json($respuesta);
         }
+
+    public function listar(){
+
+        $respuesta = ["status" => 1, "msg" => ""];
+        try{
+            $usuarios = Usuario::all();
+            $respuesta['datos'] = $usuarios;
+        }catch(\Exception $e){
+            $respuesta['status'] = 0;
+            $respuesta['msg'] = "Se ha producido un error: ".$e->getMessage();
+        }
+        return response()->json($respuesta);
+    }
+
+    public function comprar_curso($usuarios_id, $cursos_id){
+
+        $respuesta = ["status" => 1, "msg" => ""];
+
+        try{
+            $usuario = Usuario::find($usuarios_id);
+            $curso = Curso::find($cursos_id);
+
+                if($usuario&&$curso){
+
+                $usuario->cursos()->attach($curso);
+                $respuesta['msg'] = "El usuario ha adquirido el curso ".$curso->id;
+                
+                }else{
+                    $respuesta['msg'] = "Ha habido un error al buscar el usuario o curso ";
+                }
+
+        }catch(\Exception $e){
+
+                $respuesta['status'] = 0;
+                $respuesta['msg'] = "Se ha producido un error: ".$e->getMessage();
+        }
+
+        return response()->json($respuesta);
+            
+    }
+
+    public function listar_usuario_curso($id){
+
+        $respuesta = ["status" => 1, "msg" => ""];
+        try{
+            $usuario = Usuario::find($id);
+            $usuario->cursos;
+            $respuesta['datos'] = $usuario;
+        }catch(\Exception $e){
+            $respuesta['status'] = 0;
+            $respuesta['msg'] = "Se ha producido un error: ".$e->getMessage();
+        }
+        return response()->json($respuesta);
+    }
 }
